@@ -1,17 +1,17 @@
-# Architecture and trust boundaries
+# Architektur und Vertrauensgrenzen
 
-## Pull-request path
+## Weg eines Pull Requests
 
-The hosted GitHub runner receives only repository content. It parses HA YAML, scans for private/runtime files and likely credentials, runs pipeline-owned tests exactly once, and selects optional user contract tests. Gitleaks scans the working tree on every run; security-sensitive changes additionally trigger a full-history scan. Permissions are read-only. The runner has no route or credential to Home Assistant.
+Der von GitHub gehostete Runner erhält ausschließlich den Inhalt des Repositorys. Er parst die Home-Assistant-YAML-Dateien, sucht nach privaten Dateien, Laufzeitzuständen und wahrscheinlichen Zugangsdaten, führt die Pipeline-eigenen Tests genau einmal aus und wählt bei Bedarf eigene Vertragstests aus. Gitleaks prüft bei jedem Lauf den Arbeitsbaum; bei sicherheitsrelevanten Änderungen wird zusätzlich der vollständige Git-Verlauf geprüft. Alle Berechtigungen sind schreibgeschützt. Der Runner hat weder einen Netzwerkweg noch Zugangsdaten zu Home Assistant.
 
-## Deployment path
+## Weg der Bereitstellung
 
-Only a trusted machine on the same controlled network as Home Assistant pulls reviewed `main`. This starter has no generic live-write helper. An operator verifies the exact commit and a restorable full backup, compares and copies only intended files, and invokes Home Assistant's native configuration check against that same instance before a narrow reload. Rollback is manual through the installation's supported restore path.
+Nur ein vertrauenswürdiger Rechner im selben kontrollierten Netzwerk wie Home Assistant ruft den geprüften Stand von `main` ab. Diese Vorlage enthält kein allgemeines Hilfsprogramm, das in die laufende Installation schreibt. Vor der Änderung prüft die zuständige Person den genauen Commit und ein wiederherstellbares vollständiges Backup. Danach vergleicht und kopiert sie ausschließlich die vorgesehenen Dateien und führt auf derselben Instanz die native Home-Assistant-Konfigurationsprüfung aus. Erst dann darf ein gezieltes Neuladen erfolgen. Ein Rollback wird manuell über den von der jeweiligen Installation unterstützten Wiederherstellungsweg ausgeführt.
 
-## Threat model
+## Bedrohungsmodell
 
-A PR can modify workflow or scripts, so PR code is untrusted. Never attach a broadly privileged self-hosted runner or HA credentials to normal PR workflows. A green static check does not validate installed custom integrations, device availability, timing, or physical safety. Human review and post-deploy readback remain required.
+Ein Pull Request kann Workflows oder Skripte verändern. Sein Code ist daher nicht vertrauenswürdig. Verbinde normale Pull-Request-Workflows niemals mit einem weitreichend berechtigten selbst gehosteten Runner oder mit Home-Assistant-Zugangsdaten. Eine erfolgreiche statische Prüfung sagt nichts darüber aus, ob installierte benutzerdefinierte Integrationen verfügbar sind, Geräte erreichbar sind, zeitliche Abläufe stimmen oder physische Sicherheit gewährleistet ist. Manuelles Review und eine Funktionskontrolle nach der Bereitstellung bleiben Pflicht.
 
-## Risk-based contracts
+## Risikobasierte Vertragstests
 
-The selector looks at changed lines and the containing top-level YAML block. Stable IDs/entities found there are matched against `tests/test_*.py`. This keeps user-specific behavior contracts in the user's repository while this template stays generic. Baseline parsing, security checks, pipeline unit tests, and Gitleaks always run.
+Die Testauswahl betrachtet die geänderten Zeilen und den zugehörigen obersten YAML-Block. Dort gefundene stabile IDs oder Entities werden mit den Dateien unter `tests/test_*.py` abgeglichen. So verbleiben anwendungsspezifische Verhaltenstests im eigenen Repository, während diese Vorlage allgemein nutzbar bleibt. Grundlegendes Parsen, Sicherheitsprüfungen, Pipeline-Unit-Tests und Gitleaks laufen immer.

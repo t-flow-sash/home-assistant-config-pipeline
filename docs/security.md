@@ -1,14 +1,14 @@
-# Security and privacy checklist
+# Sicherheits- und Datenschutz-Checkliste
 
-Before any first push—and again before making your derived repository public—verify:
+Prüfe vor dem ersten Push und erneut, bevor du dein abgeleitetes Repository veröffentlichst:
 
-- [ ] no `.storage`, `.cloud`, `secrets.yaml`, databases, backups, logs, keys, certificates, `.env`, media, or integration state is tracked;
-- [ ] no real hostnames, LAN/public addresses, user names, device/entity names, webhook IDs, serials, tokens, or repository history was copied unintentionally;
-- [ ] every YAML credential reference uses `!secret`; the actual value exists only on the HA host;
-- [ ] `python scripts/security_check.py` passes;
-- [ ] `gitleaks git --redact .` and `gitleaks dir --redact .` pass locally or in Actions;
-- [ ] Actions has read-only contents permission and no HA/network secrets;
-- [ ] deploy happens only after review/merge from trusted local infrastructure, by copying individually reviewed files rather than bulk-replacing `/config`;
-- [ ] a tested backup and rollback path exists.
+- [ ] Es werden keine Dateien oder Verzeichnisse wie `.storage`, `.cloud`, `secrets.yaml`, Datenbanken, Backups, Protokolle, Schlüssel, Zertifikate, `.env`, Medien oder Integrationszustände versioniert.
+- [ ] Es wurden keine echten Hostnamen, LAN- oder öffentlichen Adressen, Benutzernamen, Geräte- oder Entity-Namen, Webhook-IDs, Seriennummern, Token oder Teile eines anderen Repository-Verlaufs unbeabsichtigt übernommen.
+- [ ] Jede Referenz auf Zugangsdaten in YAML verwendet `!secret`; der tatsächliche Wert liegt ausschließlich auf dem Home-Assistant-System.
+- [ ] `python scripts/security_check.py` läuft erfolgreich durch.
+- [ ] `gitleaks git --redact .` und `gitleaks dir --redact .` laufen lokal oder in GitHub Actions erfolgreich durch.
+- [ ] GitHub Actions hat nur Leserechte auf den Repository-Inhalt und erhält keine Home-Assistant- oder Netzwerk-Secrets.
+- [ ] Die Bereitstellung erfolgt erst nach Review und Merge aus einer vertrauenswürdigen lokalen Umgebung. Dabei werden nur einzeln geprüfte Dateien kopiert; `/config` wird niemals gesammelt ersetzt.
+- [ ] Ein getestetes Backup- und Rollback-Verfahren ist vorhanden.
 
-Documentation uses placeholders such as `YOUR-NAME` and `/path/to/...`. Replace them locally; never commit credentials. If a secret was ever committed, deleting the file is insufficient: revoke/rotate it immediately and clean history before publication.
+Die Dokumentation verwendet Platzhalter wie `DEIN-NAME` und `/path/to/...`. Ersetze sie nur lokal und committe niemals Zugangsdaten. Wurde ein Secret irgendwann eingecheckt, reicht das Löschen der Datei nicht aus: Sperre oder rotiere den Wert sofort und bereinige den Git-Verlauf vor der Veröffentlichung.

@@ -1,26 +1,26 @@
-## Purpose
+## Zweck
 
-<!-- What changes, and why? -->
+<!-- Was ändert sich und warum? -->
 
-## Scope and risk
+## Umfang und Risiko
 
-- [ ] Normal configuration/documentation change
-- [ ] Security-sensitive: auth/HTTP/proxy, shell/command, webhook, alarm/lock, credentials, CI, or deployment
-- Affected HA areas/entities (no private values):
+- [ ] Normale Konfigurations- oder Dokumentationsänderung
+- [ ] Sicherheitsrelevant: Authentifizierung/HTTP/Proxy, Shell/Befehl, Webhook, Alarm/Schloss, Zugangsdaten, CI oder Bereitstellung
+- Betroffene Home-Assistant-Bereiche oder Entities (keine privaten Werte):
 
-## Verification
+## Prüfung
 
-- [ ] `./scripts/validate.sh --all` passed locally, or I explained why not
-- [ ] I reviewed the complete diff for secrets and runtime/private files
-- [ ] I described a manual functional check for the real HA instance
-- [ ] Native `ha core check` / **Check configuration** will run before reload/restart
+- [ ] `./scripts/validate.sh --all` ist lokal erfolgreich durchgelaufen oder ich habe begründet, warum nicht
+- [ ] Ich habe den vollständigen Diff auf Secrets, Laufzeitzustände und private Dateien geprüft
+- [ ] Ich habe einen manuellen Funktionstest für die tatsächliche Home-Assistant-Instanz beschrieben
+- [ ] Vor dem Neuladen oder Neustart wird `ha core check` beziehungsweise **Konfiguration prüfen** ausgeführt
 
-## Deployment
+## Bereitstellung
 
-- [ ] No deployment required
-- [ ] Reload affected domain(s)
-- [ ] Controlled restart required
+- [ ] Keine Bereitstellung erforderlich
+- [ ] Betroffene Bereiche neu laden
+- [ ] Kontrollierter Neustart erforderlich
 
 ## Rollback
 
-<!-- Name the exact files/commit and how the pre-deploy backup will be restored. -->
+<!-- Benenne die genauen Dateien beziehungsweise den Commit und beschreibe, wie das Backup von vor der Bereitstellung wiederhergestellt wird. -->
