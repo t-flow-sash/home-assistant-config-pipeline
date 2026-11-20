@@ -22,6 +22,8 @@ Für CI werden weder GitHub-Secret noch Home-Assistant-Token, SSH-Schlüssel, LA
 8. Die Bereitstellung bleibt lokal und manuell. Diese Vorlage enthält bewusst kein allgemeines Skript, das in das laufende Verzeichnis `/config` schreibt. Teste Backup und Rollback vor der ersten Änderung.
 9. Optional und erst nach dieser Abnahme: Richte einen manuellen GitHub-Trigger nach [Manuelles GitHub-Deployment mit lokalem Vertrauensanker](github-triggered-deployment.md) ein. Beginne nur mit `preview`; aktiviere `apply` nie vor einem nachgewiesenen Backup-/Rollback-Test.
 
+Wenn du Claude Desktop oder Codex in der ChatGPT-Desktop-App als Editor verwenden möchtest, richte zuerst den Clone ein und folge dann [Desktop-Agenten sicher verwenden](desktop-agents.md). Der Agent erhält nur den Clone oder einen Worktree, niemals `/config` oder Secrets, und endet mit einem Pull Request.
+
 Ein GitHub-gehosteter Runner soll dafür **keinen** direkten Zugang zum Heimnetz erhalten. Für die optionale Variante bleibt die Validierung auf `ubuntu-latest`; nur der manuelle Deployment-Job wird an einen dedizierten lokalen Runner geroutet. Dieser Runner darf weder Pull-Request-Code ausführen noch direkt in die Home-Assistant-Konfiguration schreiben.
 
 ## Empfohlene Struktur des eigenen Repositorys

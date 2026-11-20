@@ -4,6 +4,8 @@
 
 Der von GitHub gehostete Runner erhält ausschließlich den Inhalt des Repositorys. Er parst die Home-Assistant-YAML-Dateien, sucht nach privaten Dateien, Laufzeitzuständen und wahrscheinlichen Zugangsdaten, führt die Pipeline-eigenen Tests genau einmal aus und wählt bei Bedarf eigene Vertragstests aus. Gitleaks prüft bei jedem Lauf den Arbeitsbaum; bei sicherheitsrelevanten Änderungen wird zusätzlich der vollständige Git-Verlauf geprüft. Alle Berechtigungen sind schreibgeschützt. Der Runner hat weder einen Netzwerkweg noch Zugangsdaten zu Home Assistant.
 
+Ein optionaler Desktop-Agent liegt vor GitHub in derselben Vertrauenszone wie der lokale Editor. Er darf ausschließlich einen Clone oder isolierten Worktree bearbeiten und einen Branch samt Pull Request vorbereiten. Er erhält weder `/config` noch Secrets, Home-Assistant-Zugang, Runner- oder Deployment-Rechte. Details stehen unter [Claude Desktop und Codex als lokale Bearbeitungsoberflächen](desktop-agents.md).
+
 ## Weg der Bereitstellung
 
 Nur ein vertrauenswürdiger Rechner im selben kontrollierten Netzwerk wie Home Assistant ruft den geprüften Stand von `main` ab. Diese Vorlage enthält kein allgemeines Hilfsprogramm, das in die laufende Installation schreibt. Vor der Änderung prüft die zuständige Person den genauen Commit und ein wiederherstellbares vollständiges Backup. Danach vergleicht und kopiert sie ausschließlich die vorgesehenen Dateien und führt auf derselben Instanz die native Home-Assistant-Konfigurationsprüfung aus. Erst dann darf ein gezieltes Neuladen erfolgen. Ein Rollback wird manuell über den von der jeweiligen Installation unterstützten Wiederherstellungsweg ausgeführt.
