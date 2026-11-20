@@ -26,7 +26,7 @@ Editor → Branch → GitHub-PR → statische Prüfung/Review → Merge nach mai
                                                                           ↘ manueller Rollback
 ```
 
-Der Pull-Request-Workflow stellt **niemals** Konfiguration bereit und benötigt keinen Zugriff auf Home Assistant. Weitere Einzelheiten stehen unter [Architektur und Vertrauensgrenzen](docs/architecture.md).
+Der Pull-Request-Workflow stellt **niemals** Konfiguration bereit und benötigt keinen Zugriff auf Home Assistant. Weitere Einzelheiten stehen unter [Architektur und Vertrauensgrenzen](docs/architecture.md). Optional kann ein davon getrennter, ausschließlich manueller Workflow einen lokalen Vertrauensanker anstoßen; er führt keinen PR-Code aus und schreibt nicht selbst in Home Assistant.
 
 ## Schnellstart
 
@@ -66,7 +66,9 @@ git push -u origin HEAD
 
 ## Lokale Bereitstellung
 
-Stelle niemals aus einem Pull-Request-Workflow bereit. Diese Vorlage enthält bewusst kein allgemeines Skript, das in eine laufende Installation schreibt. Folge stattdessen [Manuelle lokale Bereitstellung und Rollback](docs/deployment.md): Prüfe ein vollständiges Backup, vergleiche und kopiere ausschließlich die freigegebenen Dateien, führe die Home-Assistant-eigene Konfigurationsprüfung auf genau dieser Instanz aus und lade anschließend nur die betroffenen Bereiche neu.
+Stelle niemals aus einem Pull-Request-Workflow bereit. Diese Vorlage enthält bewusst kein allgemeines Skript, das in eine laufende Installation schreibt. Folge zunächst [Manuelle lokale Bereitstellung und Rollback](docs/deployment.md): Prüfe ein vollständiges Backup, vergleiche und kopiere ausschließlich die freigegebenen Dateien, führe die Home-Assistant-eigene Konfigurationsprüfung auf genau dieser Instanz aus und lade anschließend nur die betroffenen Bereiche neu.
+
+Wenn dieser Ablauf erprobt ist, zeigt [Manuelles GitHub-Deployment mit lokalem Vertrauensanker](docs/github-triggered-deployment.md), wie ein `workflow_dispatch` auf `main` sicher einen dedizierten Runner im Heimnetz erreicht. GitHub bleibt Auslöser; eine feste root-eigene Bridge übernimmt nur einen grünen `origin/main`-SHA, sperrt parallele Läufe, erstellt ein Backup und rollt bei fehlgeschlagener nativer Prüfung zurück. Sichere Voreinstellung ist `preview`; auch `apply` führt keinen automatischen Reload oder Restart aus.
 
 ## Gezielte Verhaltenstests
 
@@ -78,6 +80,7 @@ Statisches Parsen kann das Verhalten einer Automation nicht beweisen. Ergänze f
 - [Architektur und Vertrauensgrenzen](docs/architecture.md)
 - [Sicherheits- und Datenschutz-Checkliste](docs/security.md)
 - [Lokale Bereitstellung und Rollback](docs/deployment.md)
+- [Manuelles GitHub-Deployment mit lokalem Vertrauensanker](docs/github-triggered-deployment.md)
 - [Optionaler selbst gehosteter Runner](docs/self-hosted-runner.md)
 - [Fehlerbehebung](docs/troubleshooting.md)
 

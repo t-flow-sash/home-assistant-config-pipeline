@@ -1,6 +1,8 @@
 # Manuelle lokale Bereitstellung und Rollback
 
-Die Bereitstellung ist optional und bewusst von GitHub Actions getrennt. Diese Vorlage enthält **kein** allgemeines Skript, das in eine laufende Home-Assistant-Konfiguration schreibt: Installationspfade, Mounts, Berechtigungen, Prüfziele und Backup-Verfahren unterscheiden sich zu stark, um sie sicher zu automatisieren.
+Die Bereitstellung ist optional und bewusst vom Pull-Request-Workflow getrennt. Diese Vorlage enthält **kein** allgemeines Skript, das in eine laufende Home-Assistant-Konfiguration schreibt: Installationspfade, Mounts, Berechtigungen, Prüfziele und Backup-Verfahren unterscheiden sich zu stark, um sie sicher zu automatisieren.
+
+Dieser Ablauf ist die empfohlene Grundlage für Einsteiger. Wenn Backup und Rollback damit bereits erprobt sind, kann [Manuelles GitHub-Deployment mit lokalem Vertrauensanker](github-triggered-deployment.md) einen GitHub-Button ergänzen. Auch dort schreibt nicht der Workflow: Eine feste lokale Bridge entscheidet anhand von `main`, exaktem CI-SHA und lokaler Policy.
 
 ## Voraussetzungen
 
@@ -37,3 +39,5 @@ Die Bereitstellung ist optional und bewusst von GitHub Actions getrennt. Diese V
 5. Erstelle einen Git-Revert-Pull-Request, damit Repository und laufendes System wieder denselben Stand erreichen. Ein Git-Revert macht bereits bereitgestellte Dateien nicht rückgängig; eine Backup-Wiederherstellung allein beseitigt die Abweichung im Repository nicht.
 
 Rechnerspezifische Automatisierung für die Bereitstellung gehört erst dann in das abgeleitete private Repository, wenn sie installationsspezifische Pfadprüfungen, transaktionales Staging, geprüfte Backups und eine erprobte Wiederherstellung umfasst. Übertrage eine solche Lösung nicht verallgemeinert zurück in diese Vorlage.
+
+Für eine GitHub-ausgelöste Variante veröffentliche ebenfalls keinen generischen Writer. Dokumentiere stattdessen die schmale Schnittstelle (`preview`/`apply`) und prüfe den vollständigen [Bridge-Vertrag und die Abnahme-Checkliste](github-triggered-deployment.md#verbindlicher-bridge-vertrag).

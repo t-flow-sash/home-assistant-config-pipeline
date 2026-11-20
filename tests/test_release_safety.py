@@ -13,6 +13,22 @@ class ReleaseSafetyTests(unittest.TestCase):
         scripts = list(deploy.glob("*.sh")) if deploy.is_dir() else []
         self.assertEqual(scripts, [])
 
+    def test_manual_github_deployment_documents_safe_contract(self):
+        guide = (ROOT / "docs/github-triggered-deployment.md").read_text(encoding="utf-8")
+        for requirement in (
+            "workflow_dispatch",
+            "github.ref == 'refs/heads/main'",
+            "Absichtlich kein actions/checkout",
+            "origin/main",
+            "erfolgreicher **Push-Lauf auf `main`**",
+            "exklusives Lock",
+            "vollständiges, wiederherstellbares Backup",
+            "Rollback → erneutes `check_config`",
+            "keinen automatischen Reload oder Restart",
+            "Required reviewers",
+        ):
+            self.assertIn(requirement, guide)
+
     def test_pipeline_tests_run_exactly_once_without_discovery(self):
         workflow = (ROOT / ".github/workflows/validate.yml").read_text(encoding="utf-8")
         for module in (
