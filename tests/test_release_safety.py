@@ -60,7 +60,7 @@ class ReleaseSafetyTests(unittest.TestCase):
         ):
             self.assertIn(requirement, agents)
 
-    def test_primary_docs_distinguish_both_operating_models(self):
+    def test_primary_docs_distinguish_all_three_operating_models(self):
         for relative_path in (
             "README.md",
             "docs/quickstart.md",
@@ -70,7 +70,41 @@ class ReleaseSafetyTests(unittest.TestCase):
         ):
             content = (ROOT / relative_path).read_text(encoding="utf-8")
             self.assertIn("Desktop-only", content, relative_path)
-            self.assertIn("eigene", content, relative_path)
+            self.assertIn("eigene agenten", content.casefold(), relative_path)
+            self.assertIn("Hybrid", content, relative_path)
+
+    def test_architecture_compares_agent_ci_deployment_and_runner_need(self):
+        architecture = (ROOT / "docs/architecture.md").read_text(encoding="utf-8")
+        self.assertIn("Eigene Agenten + eigene lokale Runner", architecture)
+        self.assertIn("Desktop-only ohne eigene Runner", architecture)
+        self.assertIn("Hybrid Desktop-Agent + GitHub Actions", architecture)
+        self.assertIn("| Modell | Agent | CI | Deployment | Eigener Runner nötig |", architecture)
+
+    def test_desktop_only_documents_complete_manual_deployment(self):
+        guide = (ROOT / "docs/deployment.md").read_text(encoding="utf-8")
+        for requirement in (
+            "git pull --ff-only origin main",
+            "vollständiges Backup",
+            "Studio Code Server/File Editor",
+            "Samba",
+            "SSH",
+            "Konfiguration prüfen",
+            "betroffenen Bereich neu",
+            "Live-Readback",
+            "Git-Revert-Pull-Request",
+        ):
+            self.assertIn(requirement, guide)
+
+    def test_docs_enforce_runner_and_desktop_security_boundaries(self):
+        architecture = (ROOT / "docs/architecture.md").read_text(encoding="utf-8")
+        runner = (ROOT / "docs/self-hosted-runner.md").read_text(encoding="utf-8")
+        deployment = (ROOT / "docs/deployment.md").read_text(encoding="utf-8")
+        self.assertIn("GitHub-gehosteter Runner greift niemals direkt auf Heimnetz", architecture)
+        self.assertIn("CI-Runner und ein lokaler Deployment-Runner", architecture)
+        self.assertIn("Desktop-Agent erhält niemals Zugriff auf Live-Mount, Credentials oder Deployment", architecture)
+        self.assertIn("Self-hosted Deployment-Runner führt niemals Pull-Request-Code aus", runner)
+        for unsafe_generic_writer in ("cp -r ", "rm -r ", "rsync -a "):
+            self.assertNotIn(unsafe_generic_writer, deployment)
 
     def test_primary_docs_link_to_desktop_agent_guide(self):
         for relative_path in (

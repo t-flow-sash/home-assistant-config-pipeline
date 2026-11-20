@@ -1,6 +1,8 @@
 # Manuelles GitHub-Deployment mit lokalem Vertrauensanker
 
-Diese optionale Variante ergänzt den weiterhin empfohlenen [manuellen lokalen Ablauf](deployment.md) um einen **Deploy-Button in GitHub**. GitHub löst den Vorgang nur aus. Welche geprüfte Version tatsächlich in Home Assistant geschrieben werden darf, entscheidet eine feste, lokal installierte Bridge im Heimnetz.
+Diese optionale Variante ist der Deployment-Teil des **Hybridmodells Desktop-Agent + GitHub Actions**: Ein Desktop-Agent bearbeitet Clone oder Worktree und öffnet einen PR, ein GitHub-gehosteter Runner validiert, ein Mensch merged und erst danach darf ein manueller **Deploy-Button in GitHub** einen kleinen lokalen Self-hosted Deployment-Runner erreichen. Ein dauerhaft eigener KI-Agent ist nicht nötig. GitHub löst den Vorgang nur aus. Welche geprüfte Version tatsächlich in Home Assistant geschrieben werden darf, entscheidet eine feste, lokal installierte Bridge im Heimnetz.
+
+Dasselbe Deployment-Muster kann im Modell **eigene Agenten + eigene lokale Runner** verwendet werden; dort müssen lokaler CI-Runner und lokaler Deployment-Runner strikt getrennt bleiben. Für **Desktop-only ohne eigene Runner** bleibt stattdessen der [vollständige manuelle lokale Ablauf](deployment.md) maßgeblich.
 
 > **Sichere Voreinstellung:** Beginne ausschließlich mit `preview`. Aktiviere `apply` erst, nachdem Vorschau, Rechte, Backup und Rollback ohne echte Änderung geprüft wurden. Weder `preview` noch `apply` laden Home Assistant neu oder starten es neu.
 
