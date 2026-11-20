@@ -18,7 +18,7 @@ Eine wiederverwendbare, sicherheitsbewusste Vorlage, mit der du **deine eigene**
 ## Architektur
 
 ```text
-Editor → Branch → GitHub-PR → statische Prüfung/Review → Merge nach main
+Editor oder Desktop-Agent → Branch/Worktree → GitHub-PR → CI/Review → Merge nach main
                                                                │ git pull
                                                                ▼
                                      vertrauenswürdiger Rechner im eigenen Netz
@@ -27,6 +27,8 @@ Editor → Branch → GitHub-PR → statische Prüfung/Review → Merge nach mai
 ```
 
 Der Pull-Request-Workflow stellt **niemals** Konfiguration bereit und benötigt keinen Zugriff auf Home Assistant. Weitere Einzelheiten stehen unter [Architektur und Vertrauensgrenzen](docs/architecture.md). Optional kann ein davon getrennter, ausschließlich manueller Workflow einen lokalen Vertrauensanker anstoßen; er führt keinen PR-Code aus und schreibt nicht selbst in Home Assistant.
+
+Claude Desktop und Codex in der ChatGPT-Desktop-App können dabei optional als lokale Bearbeitungsoberflächen dienen. Die Anleitung [Desktop-Agenten sicher verwenden](docs/desktop-agents.md) begrenzt beide auf Clone, Branch/Worktree, Diff, Tests und PR; CI, menschliche Freigabe und das manuelle Deployment bleiben unverändert.
 
 ## Schnellstart
 
@@ -78,6 +80,7 @@ Statisches Parsen kann das Verhalten einer Automation nicht beweisen. Ergänze f
 
 - [Schnellstart und Voraussetzungen](docs/quickstart.md)
 - [Architektur und Vertrauensgrenzen](docs/architecture.md)
+- [Claude Desktop und Codex sicher verwenden](docs/desktop-agents.md)
 - [Sicherheits- und Datenschutz-Checkliste](docs/security.md)
 - [Lokale Bereitstellung und Rollback](docs/deployment.md)
 - [Manuelles GitHub-Deployment mit lokalem Vertrauensanker](docs/github-triggered-deployment.md)

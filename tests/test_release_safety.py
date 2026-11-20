@@ -29,6 +29,44 @@ class ReleaseSafetyTests(unittest.TestCase):
         ):
             self.assertIn(requirement, guide)
 
+    def test_desktop_agents_document_safe_delivery_contract(self):
+        guide = (ROOT / "docs/desktop-agents.md").read_text(encoding="utf-8")
+        agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
+        for requirement in (
+            "Claude Desktop",
+            "Codex in der ChatGPT-Desktop-App",
+            "Nicht mit **Claude Code** verwechseln",
+            "Nicht mit der **Codex CLI** verwechseln",
+            "`secrets.yaml`",
+            "Kein direkter `main`-Push",
+            "./scripts/validate.sh --all",
+            "GitHub CI",
+            "menschliche Prüfung",
+            "`workflow_dispatch` auf `main`",
+            "keine Home-Assistant-MCP-",
+            "danger-full-access",
+        ):
+            self.assertIn(requirement, guide)
+
+        for requirement in (
+            "Pushe niemals direkt nach `main`",
+            "Greife niemals auf das Home-Assistant-Verzeichnis `/config`",
+            "Starte keinen Deployment-Workflow",
+            "menschliche PR-Prüfung",
+        ):
+            self.assertIn(requirement, agents)
+
+    def test_primary_docs_link_to_desktop_agent_guide(self):
+        for relative_path in (
+            "README.md",
+            "docs/quickstart.md",
+            "docs/architecture.md",
+            "docs/deployment.md",
+            "docs/troubleshooting.md",
+        ):
+            content = (ROOT / relative_path).read_text(encoding="utf-8")
+            self.assertIn("desktop-agents.md", content, relative_path)
+
     def test_pipeline_tests_run_exactly_once_without_discovery(self):
         workflow = (ROOT / ".github/workflows/validate.yml").read_text(encoding="utf-8")
         for module in (

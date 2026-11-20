@@ -27,3 +27,7 @@ Es gibt bewusst kein allgemeines Hilfsprogramm, das in die laufende Installation
 ## Kein eigener gezielter Test wurde ausgewählt
 
 Das ist bei einem neuen, unkritischen Bereich in Ordnung; die grundlegenden Prüfungen wurden trotzdem ausgeführt. Dokumentiere den manuellen Funktionstest im Pull Request. Ergänze einen gezielten Vertragstest, sobald eine stabile ID oder Entity wichtiges Verhalten absichern kann.
+
+## Claude Desktop oder Codex sieht zu viele Dateien
+
+Stoppe die Aufgabe und entziehe den Zugriff. Verbinde nur den lokalen Clone oder einen isolierten Worktree, niemals den Elternordner, das komplette Home-Verzeichnis, `/config` oder eine Netzwerkfreigabe. Produktspezifische Einrichtung, Worktree-Probleme und sichere Berechtigungen beschreibt [Desktop-Agenten sicher verwenden](desktop-agents.md#fehlerbehebung).
