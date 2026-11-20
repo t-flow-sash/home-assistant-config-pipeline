@@ -1,6 +1,6 @@
 # Home Assistant Config Pipeline
 
-Eine wiederverwendbare, sicherheitsbewusste Vorlage, mit der du **deine eigene** Home-Assistant-YAML-Konfiguration über GitHub Pull Requests verwaltest. Sie unterstützt zwei Betriebsmodelle: Desktop-only mit GitHub-gehosteter CI und manueller lokaler Bereitstellung sowie eigene Agenten mit eigener, klar getrennter Runner-Infrastruktur. Beide Wege behalten Review, native Home-Assistant-Prüfung, Backup und Rollback als feste Grenzen bei.
+Eine wiederverwendbare, sicherheitsbewusste Vorlage, mit der du **deine eigene** Home-Assistant-YAML-Konfiguration über GitHub Pull Requests verwaltest. Sie unterstützt drei Betriebsmodelle: eigene Agenten mit eigenen lokalen Runnern, Desktop-only ohne eigene Runner sowie den Hybridpfad aus Desktop-Agent, GitHub-gehosteter CI und optionalem lokalem Deployment-Runner. Alle Modelle behalten Review, native Home-Assistant-Prüfung, Backup und Rollback als feste Grenzen bei.
 
 > **Dieses Repository enthält bewusst keine Home-Assistant-Konfiguration.** Erstelle aus der Vorlage ein neues Repository, lasse es bis zum Abschluss der Datenschutz-Checkliste privat und versioniere anschließend nur die YAML-Dateien, die du gezielt ausgewählt hast.
 
@@ -19,12 +19,13 @@ Eine wiederverwendbare, sicherheitsbewusste Vorlage, mit der du **deine eigene**
 
 ```text
 Editor oder Agent → Branch/Worktree → GitHub-PR → CI/Review → Merge nach main
+                                                            ├─ eigene Agenten + eigene lokale Runner
                                                             ├─ Desktop-only: manuelle lokale Bereitstellung
-                                                            └─ eigene Infrastruktur: manueller GitHub-Trigger
-                                                               → getrennter Deployment-Runner → feste Bridge
+                                                            └─ Hybrid: manueller GitHub-Trigger
+                                                               → lokaler Deployment-Runner → feste Bridge
 ```
 
-Der Pull-Request-Workflow stellt **niemals** Konfiguration bereit und benötigt keinen Zugriff auf Home Assistant. Weitere Einzelheiten stehen unter [Architektur und Vertrauensgrenzen](docs/architecture.md). Desktop-only-Nutzer benötigen keinen selbst gehosteten Runner: Nach dem Merge stellen sie den geprüften Stand kontrolliert lokal bereit. Wer eigene Agenten und eigene Infrastruktur betreibt, kann CI auf eigenen isolierten Runnern ausführen und optional einen davon getrennten Deployment-Runner als lokalen Vertrauensanker verwenden.
+Der Pull-Request-Workflow stellt **niemals** Konfiguration bereit und benötigt keinen Zugriff auf Home Assistant. Weitere Einzelheiten und eine Vergleichstabelle stehen unter [Architektur und Vertrauensgrenzen](docs/architecture.md). Desktop-only-Nutzer benötigen keinen selbst gehosteten Runner. Im Hybridmodell validiert weiterhin ein GitHub-gehosteter Runner; nur der optionale, manuell ausgelöste Deployment-Schritt läuft lokal. Wer eigene Agenten betreibt, kann dagegen CI auf eigenen isolierten lokalen Runnern ausführen und optional einen davon strikt getrennten lokalen Deployment-Runner verwenden. Ein GitHub-gehosteter Runner greift niemals direkt auf Heimnetz oder Home Assistant zu.
 
 Claude Desktop und Codex in der ChatGPT-Desktop-App können dabei optional als lokale Bearbeitungsoberflächen dienen. Die Anleitung [Desktop-Agenten sicher verwenden](docs/desktop-agents.md) begrenzt beide auf Clone, Branch/Worktree, Diff, Tests und PR und erklärt beide Endpfade nach dem Merge.
 
@@ -68,7 +69,7 @@ git push -u origin HEAD
 
 Stelle niemals aus einem Pull-Request-Workflow bereit. Diese Vorlage enthält bewusst kein allgemeines Skript, das in eine laufende Installation schreibt. Folge zunächst [Manuelle lokale Bereitstellung und Rollback](docs/deployment.md): Prüfe ein vollständiges Backup, vergleiche und kopiere ausschließlich die freigegebenen Dateien, führe die Home-Assistant-eigene Konfigurationsprüfung auf genau dieser Instanz aus und lade anschließend nur die betroffenen Bereiche neu.
 
-Desktop-only-Nutzer bleiben bei diesem manuellen lokalen Ablauf; dafür ist kein selbst gehosteter Runner nötig. Optional zeigt [Manuelles GitHub-Deployment mit lokalem Vertrauensanker](docs/github-triggered-deployment.md), wie ein `workflow_dispatch` auf `main` einen dedizierten lokalen Deployment-Runner erreicht. Dieser GitHub-Deploy-Button ist ein bewusst zusätzliches Betriebsmodell: PR-Code und Deployment-Runner bleiben getrennt; eine feste root-eigene Bridge übernimmt nur einen grünen `origin/main`-SHA, sperrt parallele Läufe, erstellt ein Backup und rollt bei fehlgeschlagener nativer Prüfung zurück. Sichere Voreinstellung ist `preview`; auch `apply` führt keinen automatischen Reload oder Restart aus.
+Desktop-only-Nutzer bleiben bei diesem manuellen lokalen Ablauf; dafür ist kein selbst gehosteter Runner nötig. Optional zeigt [Manuelles GitHub-Deployment mit lokalem Vertrauensanker](docs/github-triggered-deployment.md) den **Hybridpfad**: Desktop-Agent bis zum PR, GitHub-gehostete CI und danach ein manueller `workflow_dispatch` auf `main`, der einen kleinen dedizierten lokalen Deployment-Runner erreicht. Dafür ist kein dauerhaft eigener KI-Agent nötig. PR-Code und Deployment-Runner bleiben getrennt; eine feste root-eigene Bridge übernimmt nur einen grünen `origin/main`-SHA, sperrt parallele Läufe, erstellt ein Backup und rollt bei fehlgeschlagener nativer Prüfung zurück. Sichere Voreinstellung ist `preview`; auch `apply` führt keinen automatischen Reload oder Restart aus.
 
 ## Gezielte Verhaltenstests
 

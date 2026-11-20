@@ -1,18 +1,18 @@
 # Claude Desktop und Codex als lokale Bearbeitungsoberflächen
 
-Claude Desktop und **Codex in der ChatGPT-Desktop-App** können Änderungen an einem lokalen Git-Checkout vorbereiten. Sie ersetzen weder CI noch die menschliche Prüfung und erhalten keinen Zugriff auf die laufende Home-Assistant-Installation. Diese Anleitung gilt sowohl für Desktop-only-Nutzer ohne eigene Runner als auch für Nutzer, die zusätzlich eigene Agenten und eigene lokale Runner betreiben.
+Claude Desktop und **Codex in der ChatGPT-Desktop-App** können Änderungen an einem lokalen Git-Checkout vorbereiten. Sie ersetzen weder CI noch die menschliche Prüfung und erhalten keinen Zugriff auf die laufende Home-Assistant-Installation. Sie passen sowohl zum Desktop-only-Modell ohne eigene Runner als auch zum Hybridmodell mit GitHub-gehosteter CI und optionalem lokalem Deployment-Runner. Im dritten Modell können stattdessen dauerhaft eigene Agenten und eigene lokale Runner verwendet werden.
 
-Der gemeinsame verbindliche Weg reicht bis zum Merge; danach gibt es zwei dokumentierte Endpfade:
+Der gemeinsame verbindliche Weg reicht bis zum Merge; die drei Betriebsmodelle münden danach in zwei dokumentierte Endpfade:
 
 ```text
 lokaler Clone → eigener Branch/Worktree → Diff und lokale Tests → Pull Request
 → GitHub CI → menschliche Prüfung → Merge nach main
 ├─ Desktop-only: kontrollierte manuelle lokale Bereitstellung gemäß deployment.md
-└─ eigene Infrastruktur: manueller workflow_dispatch → getrennter lokaler
-   Deployment-Runner → feste Bridge → preview/apply
+├─ Hybrid: manueller workflow_dispatch → lokaler Deployment-Runner → feste Bridge
+└─ eigene Agenten + eigene Runner: getrennte lokale CI-/Deployment-Rollen möglich
 ```
 
-Im Desktop-only-Pfad läuft die mitgelieferte CI auf GitHub-gehosteten Runnern. Nach dem menschlichen Merge zieht eine zuständige Person `main` auf einem vertrauenswürdigen lokalen Rechner und folgt der manuellen Deployment-Checkliste. Dafür ist kein selbst gehosteter Runner nötig. Ein GitHub-Deploy-Button ist optional und setzt bewusst eigene Infrastruktur mit einem dedizierten lokalen Deployment-Runner als Vertrauensanker voraus.
+Im Desktop-only-Pfad läuft die mitgelieferte CI auf GitHub-gehosteten Runnern. Nach dem menschlichen Merge zieht eine zuständige Person `main` auf einem vertrauenswürdigen lokalen Rechner und folgt der manuellen Deployment-Checkliste. Dafür ist kein selbst gehosteter Runner nötig. Im Hybridpfad bleibt diese GitHub-gehostete CI bestehen; nur der optionale GitHub-Deploy-Button benötigt einen dedizierten lokalen Self-hosted Deployment-Runner. Ein dauerhaft eigener KI-Agent ist dafür nicht nötig. Ein GitHub-gehosteter Runner greift nie direkt auf Heimnetz oder Home Assistant zu.
 
 > **Wichtig:** Öffne nur den lokalen Clone oder einen zugehörigen Worktree. Gib niemals `/config`, dein komplettes Home-Verzeichnis, eine SMB-Freigabe oder einen Ordner mit Zugangsdaten frei. Richte keine Home-Assistant-MCP-, Token-, SSH- oder automatische Deployment-Brücke für den Desktop-Agenten ein.
 
@@ -22,7 +22,7 @@ Im Desktop-only-Pfad läuft die mitgelieferte CI auf GitHub-gehosteten Runnern. 
 | --- | --- | --- |
 | **Claude Desktop** | Lokale Dateien in einem bewusst verbundenen Projektordner lesen und bearbeiten, etwa über Cowork oder eine geprüfte Desktop Extension (lokaler MCP-Server) | Nicht mit **Claude Code** verwechseln. Claude Code ist ein separates agentisches Entwicklungswerkzeug mit eigener Terminal-/Desktop-Integration. Diese Seite beschreibt Claude Desktop. |
 | **Codex in der ChatGPT-Desktop-App** | Einen lokalen Projektordner öffnen, Änderungen in einem isolierten Git-Worktree vorbereiten, Diff prüfen, testen, committen, pushen und einen PR anlegen | Nicht mit der **Codex CLI** verwechseln. Die CLI läuft im Terminal und hat eigene Startparameter. Diese Seite beschreibt die Desktop-App. |
-| **GitHub Actions** | Unabhängige Prüfung des gepushten Branches und von `main`; im Desktop-only-Standard auf GitHub-gehosteten Runnern, bei eigener Infrastruktur optional auf isolierten eigenen CI-Runnern | Kein Editor und kein Deployment-Agent. Die CI hat keinen Home-Assistant- oder Heimnetzzugriff. |
+| **GitHub Actions** | Unabhängige Prüfung des gepushten Branches und von `main`; im Desktop-only- und Hybridstandard auf GitHub-gehosteten Runnern, im Modell mit eigenen Agenten optional auf isolierten eigenen lokalen CI-Runnern | Kein Editor und kein Deployment-Agent. Die CI hat keinen Home-Assistant- oder Heimnetzzugriff. |
 | **Bereitstellung** | Nach Review, grüner CI und Merge entweder kontrolliert manuell lokal oder optional per `workflow_dispatch` über einen getrennten lokalen Deployment-Runner | Darf nicht vom Desktop-Agenten automatisch ausgelöst oder umgangen werden. |
 
 Beide Desktop-Oberflächen sind optional. Ein normaler Editor mit Git bleibt vollständig ausreichend.
@@ -190,9 +190,10 @@ Nach der lokalen Agentenarbeit gelten dieselben Gates wie bei jeder anderen Änd
 2. GitHub Actions führt den verpflichtenden Job **Vorlage und Home-Assistant-Konfiguration prüfen / validate** aus.
 3. Ein Mensch prüft Diff, Testnachweise, Datenschutz und Rollback-Angaben. Fehler werden in demselben Branch behoben und erneut durch CI geprüft.
 4. Erst bei grüner CI und abgeschlossener Prüfung wird nach `main` gemergt.
-5. Das Deployment bleibt ein **separater manueller Schritt**. Desktop-only-Nutzer folgen [Manuelle lokale Bereitstellung und Rollback](deployment.md); dafür ist kein selbst gehosteter Runner nötig.
-6. Optional darf ein [`workflow_dispatch` auf `main`](github-triggered-deployment.md) den getrennten lokalen Deployment-Runner und dessen feste Bridge anstoßen. Sichere Voreinstellung ist `preview`; `apply` erfordert die dort beschriebenen Freigaben. Eigene CI-Runner und Deployment-Runner bleiben getrennt.
-7. Der Desktop-Agent erhält weder Runner-Zugriff noch Berechtigungen für Bridge, Home Assistant, Reload, Restart oder Rollback.
+5. Das Deployment bleibt ein **separater manueller Schritt**. Desktop-only-Nutzer folgen vollständig [Manuelle lokale Bereitstellung und Rollback](deployment.md); dafür ist kein selbst gehosteter Runner nötig.
+6. Im Hybridmodell darf optional ein [`workflow_dispatch` auf `main`](github-triggered-deployment.md) den getrennten lokalen Deployment-Runner und dessen feste Bridge anstoßen. Sichere Voreinstellung ist `preview`; `apply` erfordert die dort beschriebenen Freigaben. Die CI bleibt GitHub-gehostet.
+7. Im Modell mit eigenen Agenten dürfen eigene lokale CI-Runner verwendet werden. Eigene CI-Runner und Deployment-Runner bleiben getrennt.
+8. Der Desktop-Agent erhält weder Runner-Zugriff noch Zugriff auf Live-Mounts oder Credentials und keine Berechtigungen für Bridge, Deployment, Home Assistant, Reload, Restart oder Rollback.
 
 ## Fehlerbehebung
 
