@@ -20,6 +20,9 @@ Für CI werden weder GitHub-Secret noch Home-Assistant-Token, SSH-Schlüssel, LA
 6. Pushe einen Branch und öffne einen Pull Request.
 7. Lege nach dem ersten erfolgreichen Lauf eine Regel für den Branch `main` an, die den Validierungsjob verpflichtend macht.
 8. Die Bereitstellung bleibt lokal und manuell. Diese Vorlage enthält bewusst kein allgemeines Skript, das in das laufende Verzeichnis `/config` schreibt. Teste Backup und Rollback vor der ersten Änderung.
+9. Optional und erst nach dieser Abnahme: Richte einen manuellen GitHub-Trigger nach [Manuelles GitHub-Deployment mit lokalem Vertrauensanker](github-triggered-deployment.md) ein. Beginne nur mit `preview`; aktiviere `apply` nie vor einem nachgewiesenen Backup-/Rollback-Test.
+
+Ein GitHub-gehosteter Runner soll dafür **keinen** direkten Zugang zum Heimnetz erhalten. Für die optionale Variante bleibt die Validierung auf `ubuntu-latest`; nur der manuelle Deployment-Job wird an einen dedizierten lokalen Runner geroutet. Dieser Runner darf weder Pull-Request-Code ausführen noch direkt in die Home-Assistant-Konfiguration schreiben.
 
 ## Empfohlene Struktur des eigenen Repositorys
 
