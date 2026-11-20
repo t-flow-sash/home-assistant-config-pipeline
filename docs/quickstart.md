@@ -1,33 +1,33 @@
-# Quickstart and prerequisites
+# Schnellstart und Voraussetzungen
 
-## Prerequisites
+## Voraussetzungen
 
-- Git, Python 3.11 or newer, and a GitHub account;
-- a **private** repository created from this template;
-- controlled access from a trusted local machine to Home Assistant's `/config`;
-- a current encrypted Home Assistant backup;
-- enough HA knowledge to run **Check configuration**, reload affected domains, and inspect automation traces.
+- Git, Python 3.11 oder neuer und ein GitHub-Konto;
+- ein **privates** Repository, das aus dieser Vorlage erstellt wurde;
+- kontrollierter Zugriff von einem vertrauenswürdigen lokalen Rechner auf das Home-Assistant-Verzeichnis `/config`;
+- ein aktuelles, verschlüsseltes Home-Assistant-Backup;
+- ausreichende Home-Assistant-Kenntnisse, um **Konfiguration prüfen** auszuführen, betroffene Bereiche neu zu laden und Automations-Traces auszuwerten.
 
-No GitHub secret, HA token, SSH key, LAN address, or runner registration token is needed for CI.
+Für CI werden weder GitHub-Secret noch Home-Assistant-Token, SSH-Schlüssel, LAN-Adresse oder Runner-Registrierungstoken benötigt.
 
-## First setup
+## Ersteinrichtung
 
-1. Create a private repository using **Use this template**.
-2. Clone it, create `.venv`, and install `requirements.txt`.
-3. Add only intentionally versioned YAML. This template supplies no HA configuration.
-4. Keep `secrets.yaml` and all runtime state on the HA host.
-5. Run `./scripts/validate.sh --all`.
-6. Push a branch and open a PR.
-7. Require the validation job in a `main` branch ruleset after its first successful run.
-8. Keep deployment local and manual. This starter intentionally has no generic script that writes to live `/config`; test backup and rollback before the first change.
+1. Erstelle über **Use this template** ein privates Repository.
+2. Klone es, erstelle `.venv` und installiere die Abhängigkeiten aus `requirements.txt`.
+3. Füge nur bewusst ausgewählte YAML-Dateien hinzu. Diese Vorlage liefert keine Home-Assistant-Konfiguration mit.
+4. Belasse `secrets.yaml` und sämtliche Laufzeitzustände auf dem Home-Assistant-System.
+5. Führe `./scripts/validate.sh --all` aus.
+6. Pushe einen Branch und öffne einen Pull Request.
+7. Lege nach dem ersten erfolgreichen Lauf eine Regel für den Branch `main` an, die den Validierungsjob verpflichtend macht.
+8. Die Bereitstellung bleibt lokal und manuell. Diese Vorlage enthält bewusst kein allgemeines Skript, das in das laufende Verzeichnis `/config` schreibt. Teste Backup und Rollback vor der ersten Änderung.
 
-## Suggested user repository layout
+## Empfohlene Struktur des eigenen Repositorys
 
 ```text
-configuration.yaml       # yours, not supplied here
-automations.yaml         # yours, optional
-packages/                # yours, optional
-tests/test_*.py          # focused behavior contracts, optional
+configuration.yaml       # deine Datei, hier nicht mitgeliefert
+automations.yaml         # deine Datei, optional
+packages/                # deine Dateien, optional
+tests/test_*.py          # gezielte Verhaltenstests, optional
 ```
 
-Never bulk-copy `/config` into Git. Start with one reviewed file and grow deliberately.
+Kopiere `/config` niemals gesammelt in Git. Beginne mit einer einzelnen geprüften Datei und erweitere den Umfang schrittweise.

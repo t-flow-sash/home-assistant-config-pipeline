@@ -1,29 +1,29 @@
-# Troubleshooting
+# Fehlerbehebung
 
-## No Home Assistant YAML found
+## Keine Home-Assistant-YAML gefunden
 
-Expected in a fresh template. Add your own `configuration.yaml`, `automations.yaml`, `packages/`, or another supported path. No example config is intentionally shipped.
+Bei einer neuen Vorlage ist das zu erwarten. Füge deine eigene `configuration.yaml`, `automations.yaml`, Dateien unter `packages/` oder einen anderen unterstützten Pfad hinzu. Eine Beispielkonfiguration wird bewusst nicht mitgeliefert.
 
-## Included file/directory does not exist
+## Eingebundene Datei oder eingebundenes Verzeichnis fehlt
 
-The parser follows `!include` paths relative to the containing file. Commit non-sensitive included YAML or correct the path. Never add a fake secret file just to satisfy CI.
+Der Parser löst Pfade aus `!include` relativ zu der Datei auf, in der sie stehen. Committe die eingebundene YAML-Datei, sofern sie keine vertraulichen Daten enthält, oder korrigiere den Pfad. Lege niemals eine unechte Secret-Datei an, nur damit CI erfolgreich durchläuft.
 
-## Literal secret assignment
+## Secret im Klartext zugewiesen
 
-Move the value to ignored `secrets.yaml` on HA and reference it with `!secret`. For a false positive, redesign the example/name rather than broadly disabling scanning.
+Verschiebe den Wert in die ignorierte Datei `secrets.yaml` auf dem Home-Assistant-System und binde ihn mit `!secret` ein. Bei einem Fehlalarm solltest du das Beispiel oder den Namen anpassen, statt die Prüfung pauschal abzuschalten.
 
-## Gitleaks reports a finding
+## Gitleaks meldet einen Fund
 
-Treat it as real until disproved. Revoke and rotate exposed credentials first. A later deletion does not remove Git history. Use a narrowly documented allowlist only for a demonstrable false positive.
+Behandle den Fund als echt, bis das Gegenteil belegt ist. Sperre oder rotiere offengelegte Zugangsdaten zuerst. Ein späteres Löschen entfernt sie nicht aus dem Git-Verlauf. Nimm nur nachweisliche Fehlalarme über eine eng begrenzte und dokumentierte Allowlist aus.
 
-## GitHub is green but HA rejects configuration
+## GitHub ist grün, aber Home Assistant lehnt die Konfiguration ab
 
-CI understands common YAML tags but cannot know your installed HA version/integrations. Stop deployment and run native `ha core check` against the actual installation. Restore the pre-deploy backup on failure.
+CI versteht die üblichen YAML-Tags, kennt aber weder deine installierte Home-Assistant-Version noch deine Integrationen. Brich die Bereitstellung ab und führe `ha core check` auf der tatsächlichen Installation aus. Schlägt die Prüfung fehl, stelle das vor der Bereitstellung erstellte Backup wieder her.
 
-## How do I deploy?
+## Wie stelle ich die Konfiguration bereit?
 
-There is intentionally no generic live-write helper. Follow the manual checklist in `docs/deployment.md`: confirm reviewed `main`, verify a full backup, compare and copy only intended files, and run the native configuration check against the same Home Assistant instance. Never bulk-replace `/config`.
+Es gibt bewusst kein allgemeines Hilfsprogramm, das in die laufende Installation schreibt. Folge der manuellen Checkliste unter `docs/deployment.md`: Bestätige den geprüften Stand von `main`, prüfe ein vollständiges Backup, vergleiche und kopiere ausschließlich die vorgesehenen Dateien und führe auf derselben Home-Assistant-Instanz die native Konfigurationsprüfung aus. Ersetze `/config` niemals gesammelt.
 
-## No focused user test was selected
+## Kein eigener gezielter Test wurde ausgewählt
 
-That is valid for a new normal area: baseline checks still ran. Document the manual functional test in the PR. Add a focused contract when a stable ID/entity can protect important behavior.
+Das ist bei einem neuen, unkritischen Bereich in Ordnung; die grundlegenden Prüfungen wurden trotzdem ausgeführt. Dokumentiere den manuellen Funktionstest im Pull Request. Ergänze einen gezielten Vertragstest, sobald eine stabile ID oder Entity wichtiges Verhalten absichern kann.

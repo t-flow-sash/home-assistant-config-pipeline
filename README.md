@@ -1,90 +1,90 @@
 # Home Assistant Config Pipeline
 
-A reusable, security-conscious template for managing **your own** Home Assistant YAML with GitHub pull requests. It validates changes on a GitHub-hosted runner and documents a deliberately manual local deployment, native Home Assistant validation, and rollback process.
+Eine wiederverwendbare, sicherheitsbewusste Vorlage, mit der du **deine eigene** Home-Assistant-YAML-Konfiguration über GitHub Pull Requests verwaltest. Änderungen werden auf einem von GitHub gehosteten Runner geprüft. Die Vorlage beschreibt außerdem die bewusst manuelle lokale Bereitstellung, die native Konfigurationsprüfung von Home Assistant und den Rollback.
 
-> **This repository intentionally contains no Home Assistant configuration.** Create a repository from this template, keep it private until you have completed the privacy checklist, and then add only the YAML you deliberately want under version control.
+> **Dieses Repository enthält bewusst keine Home-Assistant-Konfiguration.** Erstelle aus der Vorlage ein neues Repository, lasse es bis zum Abschluss der Datenschutz-Checkliste privat und versioniere anschließend nur die YAML-Dateien, die du gezielt ausgewählt hast.
 
-## What you get
+## Funktionsumfang
 
-- always-on parsing for tracked Home Assistant YAML, including common `!include`, `!secret`, and Blueprint `!input` tags;
-- rejection of common runtime/private files and likely literal credentials;
-- risk-based selection of your own focused contract tests;
-- Gitleaks on every PR and push to `main`;
-- a pinned, least-privilege GitHub Actions workflow using `ubuntu-latest`;
-- a PR checklist for risk, test, deployment, and rollback;
-- local validation with one command;
-- a manual deployment checklist—GitHub never receives Home Assistant or LAN credentials.
+- Home-Assistant-YAML wird bei jedem Lauf geparst, einschließlich der üblichen Tags `!include`, `!secret` und `!input` für Blueprints;
+- typische Laufzeit- und private Dateien sowie wahrscheinlich im Klartext hinterlegte Zugangsdaten werden abgewiesen;
+- passende, eigene Verhaltenstests werden risikobasiert ausgewählt;
+- Gitleaks läuft bei jedem Pull Request und bei jedem Push auf `main`;
+- der GitHub-Actions-Workflow verwendet festgeschriebene Action-Versionen, minimale Berechtigungen und `ubuntu-latest`;
+- die Pull-Request-Checkliste deckt Risiko, Tests, Bereitstellung und Rollback ab;
+- die lokale Prüfung startet mit einem einzigen Befehl;
+- die Checkliste für die manuelle Bereitstellung sorgt dafür, dass GitHub weder Home-Assistant- noch LAN-Zugangsdaten benötigt.
 
-## Architecture
+## Architektur
 
 ```text
-Editor → branch → GitHub PR → static validation/review → merge to main
-                                                          │ git pull
-                                                          ▼
-                                  trusted machine on your network
-                                  verified backup → reviewed file copy → HA check
-                                                              ↘ manual rollback
+Editor → Branch → GitHub-PR → statische Prüfung/Review → Merge nach main
+                                                               │ git pull
+                                                               ▼
+                                     vertrauenswürdiger Rechner im eigenen Netz
+                                     geprüftes Backup → geprüfte Dateien kopieren → HA-Prüfung
+                                                                          ↘ manueller Rollback
 ```
 
-The PR workflow **never deploys** and does not need access to Home Assistant. See [Architecture and trust boundaries](docs/architecture.md).
+Der Pull-Request-Workflow stellt **niemals** Konfiguration bereit und benötigt keinen Zugriff auf Home Assistant. Weitere Einzelheiten stehen unter [Architektur und Vertrauensgrenzen](docs/architecture.md).
 
-## Quickstart
+## Schnellstart
 
-1. Click **Use this template** on GitHub and create a **private** repository.
-2. Clone it and install the validator:
+1. Klicke auf GitHub auf **Use this template** und erstelle ein **privates** Repository.
+2. Klone das Repository und installiere die Prüfwerkzeuge:
 
 ```bash
-git clone https://github.com/YOUR-NAME/YOUR-REPOSITORY.git
-cd YOUR-REPOSITORY
+git clone https://github.com/DEIN-NAME/DEIN-REPOSITORY.git
+cd DEIN-REPOSITORY
 python3 -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt
 ```
 
-3. Add your own HA YAML, for example `configuration.yaml` and files it includes. Do **not** copy all of `/config`; never commit `.storage/`, `secrets.yaml`, databases, backups, keys, logs, or integration state.
-4. Put secret values only in the ignored `secrets.yaml` on your Home Assistant host and reference them with `!secret`.
-5. Validate before your first push:
+3. Füge deine eigene Home-Assistant-YAML-Konfiguration hinzu, zum Beispiel `configuration.yaml` und die darin eingebundenen Dateien. Kopiere **nicht** den gesamten Inhalt von `/config`. Dateien und Verzeichnisse wie `.storage/`, `secrets.yaml`, Datenbanken, Backups, Schlüssel, Protokolle oder Integrationszustände gehören nie ins Repository.
+4. Lege geheime Werte ausschließlich in der ignorierten Datei `secrets.yaml` auf dem Home-Assistant-System ab und binde sie mit `!secret` ein.
+5. Prüfe alles vor dem ersten Push:
 
 ```bash
 ./scripts/validate.sh --all
 ```
 
-An empty template is valid; the validator prints a notice until you add HA YAML.
+Eine leere Vorlage ist gültig. Solange noch keine Home-Assistant-YAML-Datei vorhanden ist, gibt die Prüfung einen Hinweis aus.
 
-## Pull-request workflow
+## Pull-Request-Ablauf
 
 ```bash
-git switch -c fix/example-change
-# Edit your own YAML.
+git switch -c fix/beispiel-aenderung
+# Eigene YAML-Dateien bearbeiten.
 ./scripts/validate.sh --all
 git add --all
 git diff --cached
-git commit -m "fix(ha): describe the change"
+git commit -m "fix(ha): Änderung beschreiben"
 git push -u origin HEAD
 ```
 
-Open a PR and complete the supplied template. GitHub Actions uses no repository secrets. After the first green run, protect `main` and require **Validate template and Home Assistant configuration / validate**.
+Öffne einen Pull Request und fülle die mitgelieferte Vorlage aus. GitHub Actions verwendet keine Repository-Secrets. Schütze `main` nach dem ersten erfolgreichen Lauf und fordere den Check **Vorlage und Home-Assistant-Konfiguration prüfen / validate** verpflichtend an.
 
-## Local deployment
+## Lokale Bereitstellung
 
-Do not deploy from a PR workflow. This starter intentionally ships no generic live-write script. Follow [Manual local deployment and rollback](docs/deployment.md): verify a full backup, compare and copy only reviewed files, run Home Assistant's own configuration check against the same instance, then reload narrowly.
+Stelle niemals aus einem Pull-Request-Workflow bereit. Diese Vorlage enthält bewusst kein allgemeines Skript, das in eine laufende Installation schreibt. Folge stattdessen [Manuelle lokale Bereitstellung und Rollback](docs/deployment.md): Prüfe ein vollständiges Backup, vergleiche und kopiere ausschließlich die freigegebenen Dateien, führe die Home-Assistant-eigene Konfigurationsprüfung auf genau dieser Instanz aus und lade anschließend nur die betroffenen Bereiche neu.
 
-## Focused behavior tests
+## Gezielte Verhaltenstests
 
-Static parsing cannot prove automation behavior. Add a small `tests/test_*.py` contract for important behavior and mention a stable automation `id`, `unique_id`, or entity ID in that test. When the corresponding YAML block changes, `scripts/select_ci_checks.py` selects the contract. Changed user contract files run directly; pipeline-owned tests run exactly once on every CI run. `./scripts/validate.sh --all` runs all tests locally.
+Statisches Parsen kann das Verhalten einer Automation nicht beweisen. Ergänze für wichtiges Verhalten einen kleinen Vertragstest unter `tests/test_*.py` und nenne darin eine stabile Automations-`id`, `unique_id` oder Entity-ID. Ändert sich der zugehörige YAML-Block, wählt `scripts/select_ci_checks.py` den passenden Test aus. Geänderte eigene Vertragstests werden direkt ausgeführt; die zur Pipeline gehörenden Tests laufen in jedem CI-Lauf genau einmal. `./scripts/validate.sh --all` führt lokal alle Tests aus.
 
-## Documentation
+## Dokumentation
 
-- [Quickstart and prerequisites](docs/quickstart.md)
-- [Architecture and trust boundaries](docs/architecture.md)
-- [Security and privacy checklist](docs/security.md)
-- [Local deployment and rollback](docs/deployment.md)
-- [Optional self-hosted runner](docs/self-hosted-runner.md)
-- [Troubleshooting](docs/troubleshooting.md)
+- [Schnellstart und Voraussetzungen](docs/quickstart.md)
+- [Architektur und Vertrauensgrenzen](docs/architecture.md)
+- [Sicherheits- und Datenschutz-Checkliste](docs/security.md)
+- [Lokale Bereitstellung und Rollback](docs/deployment.md)
+- [Optionaler selbst gehosteter Runner](docs/self-hosted-runner.md)
+- [Fehlerbehebung](docs/troubleshooting.md)
 
-## Non-goals
+## Nicht vorgesehen
 
-This project does not ship HA configuration, store credentials/runtime state, deploy unreviewed code, replace native `check_config`, or prove physical device behavior.
+Dieses Projekt liefert keine Home-Assistant-Konfiguration aus, speichert keine Zugangsdaten oder Laufzeitzustände, stellt keinen ungeprüften Code bereit, ersetzt nicht die native Prüfung mit `check_config` und kann das Verhalten physischer Geräte nicht nachweisen.
 
-## License
+## Lizenz
 
-MIT — see [LICENSE](LICENSE).
+MIT, siehe [LICENSE](LICENSE).

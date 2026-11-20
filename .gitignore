@@ -1,4 +1,4 @@
-# Home Assistant secrets and runtime state
+# Home-Assistant-Secrets und Laufzeitzustände
 secrets.yaml
 .storage/
 .cloud/
@@ -22,7 +22,7 @@ ip_bans.yaml
 *.pfx
 .env
 
-# Local tooling
+# Lokale Entwicklungswerkzeuge
 .venv/
 __pycache__/
 *.py[cod]
