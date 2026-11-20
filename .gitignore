@@ -1,0 +1,34 @@
+# Home Assistant secrets and runtime state
+secrets.yaml
+.storage/
+.cloud/
+.cache/
+backups/
+backup/
+ssl/
+tts/
+www/
+zigbee2mqtt/
+known_devices.yaml
+ip_bans.yaml
+.shopping_list.json
+*.db
+*.db-*
+*.sqlite*
+*.log
+*.key
+*.pem
+*.p12
+*.pfx
+.env
+
+# Local tooling
+.venv/
+__pycache__/
+*.py[cod]
+.coverage
+.pytest_cache/
+.mypy_cache/
+site/
+.deploy-backups/
+.DS_Store
