@@ -43,6 +43,9 @@ class ReleaseSafetyTests(unittest.TestCase):
             "GitHub CI",
             "menschliche Prüfung",
             "`workflow_dispatch` auf `main`",
+            "kein selbst gehosteter Runner nötig",
+            "kontrollierte manuelle lokale Bereitstellung",
+            "Eigene CI-Runner und Deployment-Runner bleiben getrennt",
             "keine Home-Assistant-MCP-",
             "danger-full-access",
         ):
@@ -53,8 +56,21 @@ class ReleaseSafetyTests(unittest.TestCase):
             "Greife niemals auf das Home-Assistant-Verzeichnis `/config`",
             "Starte keinen Deployment-Workflow",
             "menschliche PR-Prüfung",
+            "zwei dokumentierte Endpfade",
         ):
             self.assertIn(requirement, agents)
+
+    def test_primary_docs_distinguish_both_operating_models(self):
+        for relative_path in (
+            "README.md",
+            "docs/quickstart.md",
+            "docs/architecture.md",
+            "docs/deployment.md",
+            "docs/self-hosted-runner.md",
+        ):
+            content = (ROOT / relative_path).read_text(encoding="utf-8")
+            self.assertIn("Desktop-only", content, relative_path)
+            self.assertIn("eigene", content, relative_path)
 
     def test_primary_docs_link_to_desktop_agent_guide(self):
         for relative_path in (

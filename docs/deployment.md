@@ -2,9 +2,11 @@
 
 Die Bereitstellung ist optional und bewusst vom Pull-Request-Workflow getrennt. Diese Vorlage enthält **kein** allgemeines Skript, das in eine laufende Home-Assistant-Konfiguration schreibt: Installationspfade, Mounts, Berechtigungen, Prüfziele und Backup-Verfahren unterscheiden sich zu stark, um sie sicher zu automatisieren.
 
-Diese Grenze gilt auch für [Claude Desktop und Codex in der Desktop-App](desktop-agents.md): Sie dürfen Änderungen nur lokal in Branch oder Worktree bis zum Pull Request vorbereiten. Sie bekommen keinen Zugriff auf `/config`, die lokale Bridge oder den manuellen Deployment-Trigger.
+Diese Grenze gilt auch für [Claude Desktop und Codex in der Desktop-App](desktop-agents.md): Sie dürfen Änderungen nur lokal in Branch oder Worktree bis zum Pull Request vorbereiten. Sie bekommen keinen Zugriff auf `/config`, eine lokale Bridge oder einen Deployment-Trigger.
 
-Dieser Ablauf ist die empfohlene Grundlage für Einsteiger. Wenn Backup und Rollback damit bereits erprobt sind, kann [Manuelles GitHub-Deployment mit lokalem Vertrauensanker](github-triggered-deployment.md) einen GitHub-Button ergänzen. Auch dort schreibt nicht der Workflow: Eine feste lokale Bridge entscheidet anhand von `main`, exaktem CI-SHA und lokaler Policy.
+Dieser Ablauf ist der vollständige Endpfad für Desktop-only-Nutzer: lokaler Clone oder Worktree, Pull Request, GitHub-gehostete CI, menschlicher Merge und anschließend diese kontrollierte manuelle lokale Bereitstellung. Dafür ist **kein selbst gehosteter Runner** erforderlich.
+
+Wer eigene Agenten und eigene Infrastruktur betreibt, kann nach erprobtem Backup und Rollback optional einen [GitHub-Deploy-Button mit lokalem Vertrauensanker](github-triggered-deployment.md) ergänzen. Dafür ist bewusst ein dedizierter lokaler Deployment-Runner nötig. Auch dort schreibt nicht der Workflow: Eine feste lokale Bridge entscheidet anhand von `main`, exaktem CI-SHA und lokaler Policy.
 
 ## Voraussetzungen
 

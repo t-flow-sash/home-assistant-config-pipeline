@@ -24,4 +24,4 @@ Diese Regeln gelten für das gesamte Repository. Lies zusätzlich `README.md` un
 
 ## Liefergrenze
 
-Ein Agent darf Branch, Diff, lokale Tests, Commit und Pull Request vorbereiten. GitHub CI und menschliche PR-Prüfung bleiben verpflichtende Gates. Nach dem Merge darf ausschließlich der dokumentierte manuelle `workflow_dispatch` auf `main` den lokalen Vertrauensanker für ein Deployment anstoßen.
+Ein Agent darf Branch, Diff, lokale Tests, Commit und Pull Request vorbereiten. CI und menschliche PR-Prüfung bleiben verpflichtende Gates. Nach dem Merge gibt es genau zwei dokumentierte Endpfade: die kontrollierte manuelle lokale Bereitstellung gemäß `docs/deployment.md` oder optional ein manueller `workflow_dispatch` auf `main` über einen getrennten lokalen Deployment-Runner und die feste Bridge. Der Desktop-Agent startet keinen der beiden Wege.
